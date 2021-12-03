@@ -3,10 +3,10 @@
     <!--- Sim Time -->
     <param name="/use_sim_time" value="true" />
 
-<!--    <arg name="bag_path"  default=" /media/qzj/Extreme\ SSD/datasets/SJTU/xiaomi/2021-12-03-13-30-50.bag"/>-->
+    <arg name="bag_path"  default=" /media/qzj/Extreme\ SSD/datasets/SJTU/xiaomi/2021-12-03-13-30-50.bag"/>
 <!--    <arg name="bag_path"  default=" /media/qzj/Extreme\ SSD/datasets/SJTU/xiaomi/2021-12-03-13-32-26.bag"/>-->
 <!--    <arg name="bag_path"  default=" /media/qzj/Extreme\ SSD/datasets/SJTU/xiaomi/2021-12-03-13-34-36.bag"/>-->
-    <arg name="bag_path"  default=" /media/qzj/Extreme\ SSD/datasets/SJTU/xiaomi/2021-12-03-13-41-11.bag"/>
+<!--    <arg name="bag_path"  default=" /media/qzj/Extreme\ SSD/datasets/SJTU/xiaomi/2021-12-03-13-41-11.bag"/>-->
 
     <arg name="voc_file"  default="$(find orb_slam3)/Vocabulary/ORBvoc.txt"/>
     <arg name="cfg_file"  default="$(find orb_slam3)/Examples/ROS/ORB_SLAM3/mynt.yaml"/>

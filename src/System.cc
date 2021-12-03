@@ -435,7 +435,7 @@ void System::SaveTrajectoryTUM(const string &filename)
     float distance = 0.f;
     float x_last, y_last, z_last;
     int cnt = 0;
-
+    cv::Mat R_Last, T_Last;
     // For each frame we have a reference keyframe (lRit), the timestamp (lT) and a flag
     // which is true when tracking failed (lbL).
     list<ORB_SLAM3::KeyFrame*>::iterator lRit = mpTracker->mlpReferences.begin();
@@ -479,11 +479,16 @@ void System::SaveTrajectoryTUM(const string &filename)
             z_last = twc.at<float>(2);
         }
         cnt++;
-
+        R_Last = Rwc;
+        T_Last = twc;
         f << setprecision(6) << *lT << " " <<  setprecision(9) << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2) << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
     }
     f.close();
-     cout << endl << "trajectory saved! Total distance = " << distance << endl;
+    std::vector<float> euler = Converter::toEuler(R_Last);
+    double rad2deg = 180.0/3.14159;
+    cout << endl << "Final translation x = " << T_Last.at<float>(0) << " y = " << T_Last.at<float>(1) << " z = " << T_Last.at<float>(2) << endl;
+    cout << "Final euler x = " << euler[0]*rad2deg << " yaw = " << euler[1]*rad2deg << " z = " << euler[2]*rad2deg << endl;
+    cout << "trajectory saved! Total distance = " << distance << endl;
 }
 
 void System::SaveKeyFrameTrajectoryTUM(const string &filename)
