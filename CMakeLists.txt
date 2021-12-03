@@ -127,6 +127,7 @@ ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
 -lcrypto
 )
 
+add_subdirectory(Examples/ROS/ORB_SLAM3)
 
 ### Build examples
 

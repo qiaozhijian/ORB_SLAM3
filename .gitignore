@@ -45,5 +45,7 @@ lib/
 cmake_modules/
 cmake-build-debug/
 
+.idea
+
 *.pyc
 *.osa
