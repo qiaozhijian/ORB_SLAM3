@@ -27,10 +27,10 @@
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
-
+#include "Converter.h"
 #include<opencv2/core/core.hpp>
 
-#include"../../../include/System.h"
+#include"System.h"
 
 using namespace std;
 
@@ -67,8 +67,7 @@ int main(int argc, char **argv)
 	ss >> boolalpha >> igb.do_rectify;
 
     if(igb.do_rectify)
-    {      
-        // Load settings related to stereo calibration
+    {
         cv::FileStorage fsSettings(argv[2], cv::FileStorage::READ);
         if(!fsSettings.isOpened())
         {
@@ -95,7 +94,7 @@ int main(int argc, char **argv)
         int cols_r = fsSettings["RIGHT.width"];
 
         if(K_l.empty() || K_r.empty() || P_l.empty() || P_r.empty() || R_l.empty() || R_r.empty() || D_l.empty() || D_r.empty() ||
-                rows_l==0 || rows_r==0 || cols_l==0 || cols_r==0)
+           rows_l==0 || rows_r==0 || cols_l==0 || cols_r==0)
         {
             cerr << "ERROR: Calibration parameters to rectify stereo are missing!" << endl;
             return -1;
@@ -115,13 +114,14 @@ int main(int argc, char **argv)
 
     ros::spin();
 
-    // Stop all threads
-    SLAM.Shutdown();
-
+    cout<<"save trajectory"<<endl;
     // Save camera trajectory
     SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory_TUM_Format.txt");
     SLAM.SaveTrajectoryTUM("FrameTrajectory_TUM_Format.txt");
     SLAM.SaveTrajectoryKITTI("FrameTrajectory_KITTI_Format.txt");
+
+    // Stop all threads
+    SLAM.Shutdown();
 
     ros::shutdown();
 

@@ -43,6 +43,16 @@ g2o::SE3Quat Converter::toSE3Quat(const cv::Mat &cvT)
     return g2o::SE3Quat(R,t);
 }
 
+    cv::Mat Converter::InvCvMat(const cv::Mat &SE3)
+    {
+        cv::Mat R = SE3.rowRange(0,3).colRange(0,3);
+        cv::Mat t = SE3.rowRange(0,3).col(3);
+        cv::Mat invT = cv::Mat::ones(4,4, SE3.type());
+        invT.rowRange(0,3).colRange(0,3) = R.t();
+        invT.rowRange(0,3).col(3) = -R.t()*t;
+        return invT;
+    }
+
 cv::Mat Converter::toCvMat(const g2o::SE3Quat &SE3)
 {
     Eigen::Matrix<double,4,4> eigMat = SE3.to_homogeneous_matrix();

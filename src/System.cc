@@ -121,6 +121,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
     //Initialize the Loop Closing thread and launch
     mpLoopCloser = new LoopClosing(mpAtlas, mpKeyFrameDatabase, mpVocabulary, mSensor!=MONOCULAR); // mSensor!=MONOCULAR);
+//    fixme 可以关回环
     mptLoopClosing = new thread(&ORB_SLAM3::LoopClosing::Run, mpLoopCloser);
 
     //Initialize the Viewer thread and launch
@@ -431,6 +432,10 @@ void System::SaveTrajectoryTUM(const string &filename)
     // We need to get first the keyframe pose and then concatenate the relative transformation.
     // Frames not localized (tracking failure) are not saved.
 
+    float distance = 0.f;
+    float x_last, y_last, z_last;
+    int cnt = 0;
+
     // For each frame we have a reference keyframe (lRit), the timestamp (lT) and a flag
     // which is true when tracking failed (lbL).
     list<ORB_SLAM3::KeyFrame*>::iterator lRit = mpTracker->mlpReferences.begin();
@@ -461,10 +466,24 @@ void System::SaveTrajectoryTUM(const string &filename)
 
         vector<float> q = Converter::toQuaternion(Rwc);
 
+        if(cnt==0){
+            x_last = twc.at<float>(0);
+            y_last = twc.at<float>(1);
+            z_last = twc.at<float>(2);
+        }else{
+            distance = distance + sqrt(pow(twc.at<float>(0)-x_last,2)
+                    +pow(twc.at<float>(1)-y_last,2)
+                    +pow(twc.at<float>(2)-z_last,2));
+            x_last = twc.at<float>(0);
+            y_last = twc.at<float>(1);
+            z_last = twc.at<float>(2);
+        }
+        cnt++;
+
         f << setprecision(6) << *lT << " " <<  setprecision(9) << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2) << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
     }
     f.close();
-    // cout << endl << "trajectory saved!" << endl;
+     cout << endl << "trajectory saved! Total distance = " << distance << endl;
 }
 
 void System::SaveKeyFrameTrajectoryTUM(const string &filename)

@@ -195,6 +195,9 @@ cv::Mat FrameDrawer::DrawFrame(bool bOldFeatures)
     }
 
     cv::Mat imWithInfo;
+
+//        fixme: 翻转图像
+    cv::flip(im, im, -1);
     DrawTextInfo(im,state, imWithInfo);
 
     return imWithInfo;
